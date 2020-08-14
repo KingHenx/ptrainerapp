@@ -3,6 +3,8 @@ import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import Button from '@material-ui/core/Button';
 import { NavLink } from 'react-router-dom';
+import AddCustomer from './AddCustomer';
+import EditCustomer from './EditCustomer';
 
 
 var trainhref = "https://customerrest.herokuapp.com/api/trainings";
@@ -25,6 +27,38 @@ export default function Customerlist(props){
         trainhref = href;
 
         document.getElementById('train').click();
+    }
+
+    const saveCustomer = (customer) => {
+        fetch('https://customerrest.herokuapp.com/api/customers', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(customer)
+        })
+        .then(res => fetchData())
+        .catch(err => console.error(err))
+    }
+
+    const updateCustomer = (customer, link) => {
+        fetch(link, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(customer)
+        })
+        .then(res => fetchData())
+        .catch(err => console.error(err))
+    }
+
+    const deleteCustomer = (link) => {
+        if(window.confirm('Do you want to Delete customer?')){
+            fetch(link, {method: 'DELETE'})
+            .then(res => fetchData())
+            .catch(err => console.error(err))
+        }
     }
 
 
@@ -65,7 +99,7 @@ export default function Customerlist(props){
             accessor: 'phone'
         },
         {
-            
+            widht: 100,
             sortable: false,
             filterable: false,
             accessor: 'links.2.href',
@@ -74,12 +108,25 @@ export default function Customerlist(props){
                 Trainings
             </Button>
             <NavLink id='train' to={"/trainings"} trainings={trainings}></NavLink></div>
+        },
+        {
+            sortable: false,
+            filterable: false,
+            width: 100,
+            Cell: row => <EditCustomer updateCustomer={updateCustomer} customer={row.original}/>
+        },
+        {
+            sortable: false,
+            filterable: false,
+            width: 100,
+            accessor: 'links.1.href',  
+            Cell: row => <Button size='small' color='secondary' onClick={() => deleteCustomer(row.value)}>Delete</Button>
         }
     ]
 
     return(
         <div>
-            
+            <AddCustomer saveCustomer={saveCustomer} />
             <ReactTable data={customers} columns={columns} />
             
         </div>
