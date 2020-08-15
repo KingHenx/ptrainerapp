@@ -2,14 +2,17 @@ import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Home from './components/Home';
 import Trainings from './components/Trainings';
+import Calendar from './components/Calendar';
 import Error from './components/Error';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Customerlist from './components/Customerlist';
 import Traininglist from './components/Traininglist';
+import { NavLink } from 'react-router-dom';
 
 class App extends Component {
+
   render() {
     return (      
        <BrowserRouter>
@@ -28,6 +31,7 @@ class App extends Component {
             <Switch>
              <Route path="/" component={Home} exact><Customerlist/></Route>
              <Route path="/trainings" component={Trainings}></Route>
+             <Route path="/calendar" component={Calendar}></Route>
             <Route component={Error}/>
            </Switch>
            

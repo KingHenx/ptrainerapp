@@ -6,20 +6,32 @@ import { NavLink } from 'react-router-dom';
 import AddCustomer from './AddCustomer';
 import EditCustomer from './EditCustomer';
 
-
 var trainhref = "https://customerrest.herokuapp.com/api/trainings";
 export { trainhref }
 
 export default function Customerlist(props){
     const[customers, setCustomers] = useState([]);
     const[trainings, setTrainings] = useState([]);
+    const[allTrainings, setAllTrainings] = useState();
 
     useEffect(() => fetchData(), []);
+    
+    useEffect(() => fetchAllTrainings(), []);
+
+    console.log("here should be " + JSON.stringify(allTrainings));
 
     const fetchData = () => {
         fetch('https://customerrest.herokuapp.com/api/customers')
         .then(response => response.json())
         .then(data => setCustomers(data.content));
+    }
+
+    const fetchAllTrainings = () => {
+        
+        fetch('https://customerrest.herokuapp.com/gettrainings', {method: 'GET'})
+        .then(res => setAllTrainings(res))
+        .catch(err => console.error(err))
+        
     }
 
     const toTrainings = (href) => {
@@ -126,6 +138,7 @@ export default function Customerlist(props){
 
     return(
         <div>
+            <NavLink to={"/calendar"}>Calendar</NavLink>
             <AddCustomer saveCustomer={saveCustomer} />
             <ReactTable data={customers} columns={columns} />
             
